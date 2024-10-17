@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { app } from './server';
+import { app } from '@api/server';
 config();
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
