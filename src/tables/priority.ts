@@ -1,6 +1,6 @@
-import { db } from "@api/connect";
+import { Database } from "sqlite3";
 
-export const createPriorityTable = (): Promise<Error | string> => {
+export const createPriorityTable = (db: Database): Promise<Error| string> => {
     return new Promise((resolve, reject) => {
         db.run(`CREATE TABLE IF NOT EXISTS priority (
         name TEXT PRIMARY KEY

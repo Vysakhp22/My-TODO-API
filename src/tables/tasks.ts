@@ -1,6 +1,6 @@
-import { db } from "@api/connect";
+import { Database } from "sqlite3";
 
-export const createTable = (): Promise<string | Error> => {
+export const createTable = (db: Database): Promise<string | Error> => {
     return new Promise((resolve, reject) => {
         db.run(`CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
