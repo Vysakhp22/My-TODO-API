@@ -14,7 +14,7 @@ const dbFileName = process.env.DB_FILE_NAME || 'TODO.db';
     connectToDatabase(dbFileName).then((response: Database) => {
         if (response) {
             console.log('Database created successfully.');
-            createPriorityTable(response).then((response: string) => {
+            createPriorityTable(response).then((response: string[]) => {
                 console.log(response);
             }).catch((error: Error) => {
                 console.log(error.message);

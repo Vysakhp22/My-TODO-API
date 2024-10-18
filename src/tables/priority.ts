@@ -1,41 +1,62 @@
 import { Database } from "sqlite3";
 
-const createTable = (db: Database): Promise<void> => {
+const createTable = (db: Database): Promise<string> => {
     return new Promise((resolve, reject) => {
-        db.run(`CREATE TABLE IF NOT EXISTS priority (
-        name TEXT PRIMARY KEY
-    )`, (err: Error) => {
+        const command = `CREATE TABLE IF NOT EXISTS priority (name TEXT PRIMARY KEY);`;
+        db.run(command, [], (err: Error) => {
             if (err) {
                 reject(new Error(err.message || 'Failed to create the priority table.'));
                 return;
             }
-            console.log('Created the priority table.');
-            resolve();
-        })
-    })
-}
+            resolve('Created the priority table.');
+        });
+    });
+};
 
-export const createPriorityTable = (db: Database): Promise<string> => {
-    return new Promise(async (resolve, reject) => {
-        await createTable(db);
-        db.get('SELECT count(*) as count FROM priority', (err, row: { count: number }) => {
+const countRecords = (db: Database): Promise<number> => {
+    return new Promise((resolve, reject) => {
+        const command = `SELECT count(*) as count FROM priority`;
+        db.get(command, [], (err, row: { count: number }) => {
             if (err) {
                 reject(new Error(err.message || 'Failed to count the records in the priority table.'));
                 return;
             }
-            if (row.count === 0) {
-                db.run(`INSERT INTO priority (name) VALUES ('Low'), ('Medium'), ('High')`, (err: Error) => {
-                    if (err) {
-                        reject(new Error(err.message || 'Failed to insert into the priority table.'));
-                        return;
-                    }
-                    console.log('Inserted into the priority table.');
-                    resolve('Created the priority table.2');
-                });
-            } else {
-                resolve('Created the priority table.');
-            }
+            resolve(row.count);
         });
+    });
+};
 
-    })
-}
+const insertRecords = (db: Database, values: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const command = `INSERT INTO priority (name) VALUES (?)`;
+        db.run(command, [values], (err) => {
+            if (err) {
+                reject(new Error(err.message || 'Failed to populate the priority table.'));
+                return;
+            }
+            resolve('Priority table populated successfully.');
+        });
+    });
+};
+
+const populateTable = async (db: Database): Promise<string> => {
+    const values = ['Low', 'Medium', 'High'];
+    await Promise.all(values.map((value) => insertRecords(db, value)));
+    return Promise.resolve('Priority table populated successfully.');
+};
+
+export const createPriorityTable = async (db: Database): Promise<[string, string]> => {
+    try {
+        const database = await createTable(db);
+        const rows = await countRecords(db);
+        let populateResult = '';
+        if (rows === 0) {
+            populateResult = await populateTable(db);
+        } else {
+            populateResult = 'Priority table already populated.';
+        }
+        return [database, populateResult];
+    } catch (err) {
+        throw err;
+    }
+};
