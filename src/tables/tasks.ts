@@ -9,11 +9,13 @@ const createTable = (db: Database): Promise<string> => {
             status TEXT,
             priority TEXT,
             due_date DATETIME,
+            user_id TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             deleted_at DATETIME,
             FOREIGN KEY (status) REFERENCES status (name),
-            FOREIGN KEY (priority) REFERENCES priority (name)
+            FOREIGN KEY (priority) REFERENCES priority (name),
+            FOREIGN KEY (user_id) REFERENCES user (id)
         );`;
         db.run(command, [], (err: Error) => {
             if (err) {
