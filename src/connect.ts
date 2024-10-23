@@ -8,8 +8,6 @@ export const connectToDatabase = (dbName: string): Promise<Database> => {
             if (err) {
                 reject(new Error(err.message || 'Failed to connect to the database.'));
                 return;
-            } else {
-                console.log('Connected to the TODO database.');
             }
         });
         console.log('Connected to the TODO database.');
