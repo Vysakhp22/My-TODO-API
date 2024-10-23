@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
+config();
 import { app } from '@api/server';
 import { databaseSetup } from './databaseSetup';
-config();
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';

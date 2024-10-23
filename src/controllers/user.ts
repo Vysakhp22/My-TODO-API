@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Database } from "sqlite3";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { userSchema } from "@api/model/user.model";
+import { generateErrorMessage } from "zod-error";
 
 
 const checkUserExists = (db: Database, email: string): Promise<any> => {
@@ -19,7 +21,13 @@ const checkUserExists = (db: Database, email: string): Promise<any> => {
 
 
 export const userSignup = async (req: Request, res: Response, db: Database): Promise<void> => {
-    const { email } = req.body;
+    const user = userSchema.safeParse(req.body);
+    if (!user.success) {
+        const errorMessages = generateErrorMessage(user.error.issues);
+        res.status(400).json({ message: errorMessages });
+        return;
+    }
+    const { email } = user.data;
     const row = await checkUserExists(db, email);
     if (row) {
         res.status(400).json({ message: 'User already exists.' });
