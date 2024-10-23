@@ -18,7 +18,7 @@ const checkUserExists = (db: Database, email: string): Promise<any> => {
 }
 
 
-export const userSignup = async (req: Request, res: Response, db: Database) => {
+export const userSignup = async (req: Request, res: Response, db: Database): Promise<void> => {
     const { email } = req.body;
     const row = await checkUserExists(db, email);
     if (row) {
@@ -42,7 +42,7 @@ export const userSignup = async (req: Request, res: Response, db: Database) => {
     }
 }
 
-export const userLogin = async (req: Request, res: Response, db: Database) => {
+export const userLogin = async (req: Request, res: Response, db: Database): Promise<void> => {
     const { email } = req.body;
     const row = await checkUserExists(db, email);
     if (!row) {

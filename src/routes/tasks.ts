@@ -1,4 +1,5 @@
 import { createTask, deleteTask, getAllTasks, getTaskById, getTasks, updateTask } from "@api/controllers/tasks";
+import checkAuth from "@api/middleware/check-auth";
 import { Router } from "express";
 import { Database } from "sqlite3";
 
@@ -7,7 +8,7 @@ const dbFileName = process.env.DB_FILE_NAME || 'TODO.db';
 const db: Database = new Database(dbFileName);
 export const taskRouter: Router = Router();
 
-taskRouter.get('/allTasks', async (req, res) => {
+taskRouter.get('/allTasks', checkAuth, async (req, res): Promise<void> => {
     try {
         await getAllTasks(req, res, db)
     } catch (err) {
@@ -19,7 +20,7 @@ taskRouter.get('/allTasks', async (req, res) => {
     }
 });
 
-taskRouter.get('/tasks', async (req, res) => {
+taskRouter.get('/tasks', checkAuth, async (req, res) => {
     try {
         await getTasks(req, res, db)
     } catch (err) {
@@ -31,7 +32,7 @@ taskRouter.get('/tasks', async (req, res) => {
     }
 });
 
-taskRouter.get('/getTasks', async (req, res) => {
+taskRouter.get('/getTasks', checkAuth, async (req, res) => {
     try {
         await getTaskById(req, res, db)
     } catch (err) {
@@ -43,7 +44,7 @@ taskRouter.get('/getTasks', async (req, res) => {
     }
 });
 
-taskRouter.post('/createTask', async (req, res) => {
+taskRouter.post('/createTask', checkAuth, async (req, res) => {
     try {
         await createTask(req, res, db)
     } catch (err) {
@@ -55,7 +56,7 @@ taskRouter.post('/createTask', async (req, res) => {
     }
 });
 
-taskRouter.put('/updateTask', async (req, res) => {
+taskRouter.put('/updateTask', checkAuth, async (req, res) => {
     try {
         await updateTask(req, res, db)
     } catch (err) {
@@ -67,7 +68,7 @@ taskRouter.put('/updateTask', async (req, res) => {
     }
 });
 
-taskRouter.delete('/deleteTask', async (req, res) => {
+taskRouter.delete('/deleteTask', checkAuth, async (req, res) => {
     try {
         await deleteTask(req, res, db)
     } catch (err) {
