@@ -13,6 +13,18 @@ export const getAllTasks = async (req: Request, res: Response, db: Database) => 
     });
 };
 
+export const getTasks = async (req: Request, res: Response, db: Database) => {
+    const userId = req.params.userId;
+    const command = `SELECT * FROM task WHERE userId = ? AND deleted_at IS NULL`;
+    db.all(command, [userId], (err: Error, rows: any) => {
+        if (err) {
+            res.status(500).json({ message: err.message || 'Failed to get the tasks.' });
+            return;
+        }
+        res.status(200).json(rows);
+    });
+};
+
 export const getTaskById = async (req: Request, res: Response, db: Database) => {
     const id = req.params.id;
     const command = `SELECT * FROM task WHERE id = ?`;

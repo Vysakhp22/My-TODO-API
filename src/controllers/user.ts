@@ -73,3 +73,17 @@ export const userLogin = async (req: Request, res: Response, db: Database) => {
         });
     }
 }
+
+export const getAllUsers = (_: Request, res: Response, db: Database): Promise<void> => {
+    return new Promise((resolve, _) => {
+        const command = `SELECT * FROM user`;
+        db.all(command, (err: Error, rows: any) => {
+            if (err) {
+                res.status(500).json({ message: err.message || 'Failed to get the users.' });
+                return resolve();
+            }
+            res.status(200).json(rows);
+            return resolve();
+        });
+    });
+}

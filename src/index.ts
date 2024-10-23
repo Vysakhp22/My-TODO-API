@@ -13,10 +13,6 @@ async function startServer() {
         await databaseSetup(dbFileName);
         console.log('Database setup completed.');
 
-        // Set up all routes
-        // setupRoutes(app);
-        console.log('Routes setup completed.');
-
         // Start the server
         app.listen(port, () => {
             console.log(`Server is running at http://${host}:${port}`);

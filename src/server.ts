@@ -1,4 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { taskRouter } from './routes/tasks';
+import { userRouter } from './routes/user';
+
 
 // Create an express application
 export const app = express();
@@ -20,16 +23,25 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
     next();
 });
 
+// app.get('/', (_, res: Response) => {
+//     res.send('Hello World');
+// });
+app.use('/user', userRouter);
+app.use('/todo', taskRouter);
 
-app.get('/', (_, res: Response) => {
-    res.send('Hello World');
+
+app.use((_: Request, res: Response, next: NextFunction) => {
+    // Only create error if no other route handled the request
+    if (!res.headersSent) {
+        const error: any = new Error('Not found');
+        error.status = 404;
+        next(error);
+    }
 });
 
-app.use((_, res: Response, next: NextFunction) => {
-    res.status(404).json({ message: 'Route not found' });
-    next();
-});
-
-app.use((err: Error, _: Request, res: Response) => {
-    res.status(500).json({ message: err.message });
+// Error handling middleware
+app.use((error: any, _: Request, res: Response, __: NextFunction) => {
+    res.status(error.status || 500).json({
+        message: error.message || 'Internal Server Error'
+    });
 });

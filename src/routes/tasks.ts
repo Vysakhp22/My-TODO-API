@@ -1,13 +1,13 @@
-import { createTask, deleteTask, getAllTasks, getTaskById, updateTask } from "@api/controllers/tasks";
+import { createTask, deleteTask, getAllTasks, getTaskById, getTasks, updateTask } from "@api/controllers/tasks";
 import { Router } from "express";
 import { Database } from "sqlite3";
 
 
 const dbFileName = process.env.DB_FILE_NAME || 'TODO.db';
-const router: Router = Router();
 const db: Database = new Database(dbFileName);
+export const taskRouter: Router = Router();
 
-router.get('/tasks', async (req, res) => {
+taskRouter.get('/allTasks', async (req, res) => {
     try {
         await getAllTasks(req, res, db)
     } catch (err) {
@@ -19,7 +19,19 @@ router.get('/tasks', async (req, res) => {
     }
 });
 
-router.get('/getTasks', async (req, res) => {
+taskRouter.get('/tasks', async (req, res) => {
+    try {
+        await getTasks(req, res, db)
+    } catch (err) {
+        if (err instanceof Error) {
+            res.status(500).json({ message: err.message });
+            return;
+        }
+        res.status(500).json({ message: 'Failed to get the tasks.' });
+    }
+});
+
+taskRouter.get('/getTasks', async (req, res) => {
     try {
         await getTaskById(req, res, db)
     } catch (err) {
@@ -31,7 +43,7 @@ router.get('/getTasks', async (req, res) => {
     }
 });
 
-router.post('/createTask', async (req, res) => {
+taskRouter.post('/createTask', async (req, res) => {
     try {
         await createTask(req, res, db)
     } catch (err) {
@@ -43,7 +55,7 @@ router.post('/createTask', async (req, res) => {
     }
 });
 
-router.put('/updateTask', async (req, res) => {
+taskRouter.put('/updateTask', async (req, res) => {
     try {
         await updateTask(req, res, db)
     } catch (err) {
@@ -55,7 +67,7 @@ router.put('/updateTask', async (req, res) => {
     }
 });
 
-router.delete('/deleteTask', async (req, res) => {
+taskRouter.delete('/deleteTask', async (req, res) => {
     try {
         await deleteTask(req, res, db)
     } catch (err) {
