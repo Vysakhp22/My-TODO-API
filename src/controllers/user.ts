@@ -27,7 +27,7 @@ export const userSignup = async (req: Request, res: Response, db: Database): Pro
         res.status(400).json({ message: errorMessages });
         return;
     }
-    const { email } = user.data;
+    const { name, email } = req.body;
     const row = await checkUserExists(db, email);
     if (row) {
         res.status(400).json({ message: 'User already exists.' });
@@ -38,8 +38,8 @@ export const userSignup = async (req: Request, res: Response, db: Database): Pro
                 res.status(500).json({ message: 'Failed to hash the password.' });
                 return;
             }
-            const command = `INSERT INTO user (id, email, password) VALUES (?, ?, ?)`;
-            db.run(command, [crypto.randomUUID(), email, hash], (err: Error) => {
+            const command = `INSERT INTO user (id, name, email, password) VALUES (?, ?, ?, ?)`;
+            db.run(command, [crypto.randomUUID(), name, email, hash], (err: Error) => {
                 if (err) {
                     res.status(500).json({ message: err.message || 'Failed to signup the user.' });
                     return;
@@ -70,7 +70,7 @@ export const userLogin = async (req: Request, res: Response, db: Database): Prom
                 email: row.email,
                 id: row.id
             },
-                process.env.JWT_SECRET || 'default_secret',
+                process.env.JWT_KEY!,
                 {
                     expiresIn: '1h'
                 });

@@ -4,7 +4,7 @@ import { Router } from "express";
 import { Database } from "sqlite3";
 
 
-const dbFileName = process.env.DB_FILE_NAME || 'TODO.db';
+const dbFileName = process.env.DB_FILE_NAME!;
 const db: Database = new Database(dbFileName);
 export const taskRouter: Router = Router();
 

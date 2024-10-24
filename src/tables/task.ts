@@ -2,7 +2,7 @@ import { Database } from "sqlite3";
 
 const createTable = (db: Database): Promise<string> => {
     return new Promise((resolve, reject) => {
-        const command = `CREATE TABLE IF NOT EXISTS tasks (
+        const command = `CREATE TABLE IF NOT EXISTS task (
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
             description TEXT,
@@ -19,10 +19,10 @@ const createTable = (db: Database): Promise<string> => {
         );`;
         db.run(command, [], (err: Error) => {
             if (err) {
-                reject(new Error(err.message || 'Failed to create the tasks table.'));
+                reject(new Error(err.message || 'Failed to create the task table.'));
                 return;
             }
-            resolve('Created the tasks table.');
+            resolve('Created the task table.');
         });
     });
 };

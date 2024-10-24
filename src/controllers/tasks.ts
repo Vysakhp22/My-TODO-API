@@ -19,7 +19,7 @@ export const getAllTasks = (req: Request, res: Response, db: Database): Promise<
 export const getTasks = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
         const userId = req.params.userId;
-        const command = `SELECT * FROM task WHERE userId = ? AND deleted_at IS NULL`;
+        const command = `SELECT * FROM task WHERE user_id = ? AND deleted_at IS NULL`;
         db.all(command, [userId], (err: Error, rows: any) => {
             if (err) {
                 res.status(500).json({ message: err.message || 'Failed to get the tasks.' });

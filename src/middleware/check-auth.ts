@@ -56,7 +56,7 @@ export const checkAuth = (
         const token = authHeader.split(' ')[1];
 
         // Verify and decode the token
-        const decoded = jwt.verify(token, process.env.JWT_KEY as string) as TokenPayload;
+        const decoded = jwt.verify(token, process.env.JWT_KEY!) as TokenPayload;
 
         // Validate token expiration explicitly
         if (decoded.exp && Date.now() >= decoded.exp * 1000) {
