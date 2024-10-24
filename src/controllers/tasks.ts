@@ -3,8 +3,8 @@ import { Database } from "sqlite3";
 
 export const getAllTasks = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
-        const userId = req.params.userId;
-        const command = `SELECT * FROM task WHERE userId = ?`;
+        const userId = req.userData?.id;
+        const command = `SELECT * FROM task WHERE user_id = ?`;
         db.all(command, [userId], (err: Error, rows: any) => {
             if (err) {
                 res.status(500).json({ message: err.message || 'Failed to get the tasks.' });
@@ -51,8 +51,8 @@ export const createTask = (req: Request, res: Response, db: Database): Promise<v
         const { title, description, status, priority, dueDate, userId } = req.body;
         const createdAt = new Date().toISOString();
         const updatedAt = new Date().toISOString();
-        const command = `INSERT INTO task (title, description, status, priority, due_date, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        db.run(command, [title, description, status, priority, dueDate, userId, createdAt, updatedAt], (err: Error) => {
+        const command = `INSERT INTO task (id, title, description, status, priority, due_date, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        db.run(command, [crypto.randomUUID(), title, description, status, priority, dueDate, userId, createdAt, updatedAt], (err: Error) => {
             if (err) {
                 res.status(500).json({ message: err.message || 'Failed to create the task.' });
                 return resolve();

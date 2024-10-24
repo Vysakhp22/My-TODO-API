@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 // Define the structure of our JWT payload
 interface TokenPayload {
-    userId: string;
+    id: string;
     email: string;
     // Add other fields you need from your JWT
     iat?: number;
