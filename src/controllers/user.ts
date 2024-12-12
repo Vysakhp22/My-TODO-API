@@ -76,7 +76,12 @@ export const userLogin = async (req: Request, res: Response, db: Database): Prom
                 });
             res.status(200).json({
                 message: 'Authentication successful.',
-                token: token
+                token: token,
+                userDetails: {
+                    userId: row.id,
+                    name: row.name,
+                    email: row.email
+                }
             });
         });
     }
