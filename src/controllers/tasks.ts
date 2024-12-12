@@ -48,11 +48,11 @@ export const getTaskById = (req: Request, res: Response, db: Database): Promise<
 
 export const createTask = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
-        const { title, description, status, priority, dueDate, userId } = req.body;
+        const { title, status, priority, dueDate, userId } = req.body;
         const createdAt = new Date().toISOString();
         const updatedAt = new Date().toISOString();
-        const command = `INSERT INTO task (id, title, description, status, priority, due_date, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        db.run(command, [crypto.randomUUID(), title, description, status, priority, dueDate, userId, createdAt, updatedAt], (err: Error) => {
+        const command = `INSERT INTO task (id, title, status, priority, due_date, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        db.run(command, [crypto.randomUUID(), title, status, priority, dueDate, userId, createdAt, updatedAt], (err: Error) => {
             if (err) {
                 res.status(500).json({ message: err.message || 'Failed to create the task.' });
                 return resolve();
@@ -65,10 +65,10 @@ export const createTask = (req: Request, res: Response, db: Database): Promise<v
 
 export const updateTask = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
-        const { id, title, description, status, priority, due_date, deleted_at } = req.body;
+        const { id, title, status, priority, due_date, deleted_at } = req.body;
         const updated_at = new Date().toISOString();
-        const command = `UPDATE task SET title = ?, description = ?, status = ?, priority = ?, due_date = ?, updated_at = ?, deleted_at = ? WHERE id = ?`;
-        db.run(command, [title, description, status, priority, due_date, updated_at, deleted_at, id], (err: Error) => {
+        const command = `UPDATE task SET title = ?, status = ?, priority = ?, due_date = ?, updated_at = ?, deleted_at = ? WHERE id = ?`;
+        db.run(command, [title, status, priority, due_date, updated_at, deleted_at, id], (err: Error) => {
             if (err) {
                 res.status(500).json({ message: err.message || 'Failed to update the task.' });
                 return resolve();
