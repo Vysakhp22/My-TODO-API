@@ -18,7 +18,7 @@ export const getAllTasks = (req: Request, res: Response, db: Database): Promise<
 
 export const getTasks = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
-        const userId = req.params.userId;
+        const userId = req.query.userId;
         const command = `SELECT * FROM task WHERE user_id = ? AND deleted_at IS NULL`;
         db.all(command, [userId], (err: Error, rows: any) => {
             if (err) {
@@ -33,7 +33,7 @@ export const getTasks = (req: Request, res: Response, db: Database): Promise<voi
 
 export const getTaskById = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
-        const id = req.params.id;
+        const id = req.query.id;
         const command = `SELECT * FROM task WHERE id = ?`;
         db.get(command, [id], (err: Error, row: any) => {
             if (err) {
@@ -81,7 +81,7 @@ export const updateTask = (req: Request, res: Response, db: Database): Promise<v
 
 export const deleteTask = (req: Request, res: Response, db: Database): Promise<void> => {
     return new Promise((resolve, _) => {
-        const id = req.params.id;
+        const id = req.query.id;
         const deleted_at = new Date().toISOString();
         const command = `UPDATE task SET deleted_at = ? WHERE id = ?`;
         db.run(command, [deleted_at, id], (err: Error) => {
